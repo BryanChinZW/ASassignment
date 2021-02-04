@@ -20,6 +20,10 @@ namespace ASassignment
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["LoggedIn"] == null)
+            {
+                Response.Redirect("Login.aspx");
+            }
             var passwordAge = Session["PasswordAge"];
             var passwordAgeTime = Convert.ToDateTime(passwordAge);
             var timenow = DateTime.Now;

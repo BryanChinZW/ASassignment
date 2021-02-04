@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -20,7 +21,7 @@ namespace ASassignment
         {
             if(Session["LoggedIn"] == null)
             {
-               
+                Response.Redirect("Login.aspx");
             }
             var email = Session["LoggedIn"].ToString();
             var user = new User();
@@ -34,10 +35,12 @@ namespace ASassignment
             var cvv = Convert.FromBase64String(theUser.CVV);
             lbl_CVV.Text = decryptData(theUser.IV, theUser.Key, cvv);
             var time = Convert.ToDateTime(getDate(email));
+            Debug.WriteLine(getDate(email));
             time.AddMinutes(15);
-            var passwordage = DateTime.Compare(time, DateTime.Now);
-            if (passwordage > 0)
+            var passwordage = DateTime.Compare( DateTime.Now,time);
+            if (passwordage == 1)
             {
+                Debug.WriteLine("ok");
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "ok", "alertMessage();", true);
             }
 
