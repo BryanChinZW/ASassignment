@@ -37,8 +37,10 @@ namespace ASassignment
             var time = Convert.ToDateTime(getDate(email));
             Debug.WriteLine(getDate(email));
             time.AddMinutes(15);
+            Debug.WriteLine(time.ToString());
+            Debug.WriteLine(DateTime.Now.ToString());
             var passwordage = DateTime.Compare( DateTime.Now,time);
-            if (passwordage == 1)
+            if (passwordage < 0)
             {
                 Debug.WriteLine("ok");
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "ok", "alertMessage();", true);
@@ -102,6 +104,19 @@ namespace ASassignment
 
         protected void passChange_Click(object sender, EventArgs e)
         {
+            var email = Session["LoggedIn"].ToString();
+            var time = Convert.ToDateTime(getDate(email));
+            Debug.WriteLine(getDate(email));
+            time.AddMinutes(5);
+            var passwordage = DateTime.Compare(DateTime.Now, time);
+            if (passwordage < 0)
+            {
+                Session["minTime"] = 1;
+            }
+            else
+            {
+                Session["minTime"] = 0;
+            }
             Response.Redirect("ChangePassword.aspx");
         }
     }

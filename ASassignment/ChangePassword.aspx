@@ -9,10 +9,10 @@
 <body>
     <form id="form1" runat="server">
         <div>
-            old password<asp:TextBox ID="oldPass" runat="server"></asp:TextBox>
+            old password<asp:TextBox ID="oldPass" TextMode="Password" runat="server"></asp:TextBox>
             <br />
             <br />
-            new password<asp:TextBox ID="newPass" runat="server"></asp:TextBox>
+            new password<asp:TextBox ID="newPass" TextMode="Password" runat="server"></asp:TextBox>
             <br />
             <asp:Label ID="errorMsg" runat="server"></asp:Label>
             <br />

@@ -75,98 +75,82 @@ namespace ASassignment
         {
             if (ValidateCaptcha())
             {
-                // implement codes for the button event
-                // Extract data from textbox
+                var fname = HttpUtility.HtmlEncode(FName.Text);
+                var lname = HttpUtility.HtmlEncode(LName.Text);
+                var email = HttpUtility.HtmlEncode(Email.Text);
+                var creditname = HttpUtility.HtmlEncode(CreditName.Text);
+                var creditno = HttpUtility.HtmlEncode(CreditNo.Text);
+                var creditdate = HttpUtility.HtmlEncode(CreditDate.Text);
+                var cvv = HttpUtility.HtmlEncode(CVV.Text);
+                var pass = HttpUtility.HtmlEncode(Pass.Text);
+                var pass2 = HttpUtility.HtmlEncode(Pass2.Text);
+                var dob = HttpUtility.HtmlEncode(DoB.Text);
+                var error = "";
+                if (fname == "")
+                {
+                    error = error + " Enter First Name </br>";
+                }
+                if (lname == "")
+                {
+                    error = error + "  Enter Last Name  </br>";
+                }
+                if (email == "")
+                {
+                    error = error + " Enter Email  </br>";
+                }
+                else
+                {
+                    var validEmail = IsValidEmail(email);
+                    if (!validEmail)
+                    {
+                        error = error + " Enter Email properly </br>";
+                    }
+                }
+                if (creditname == "")
+                {
+                    error = error + " Enter credit name  </br>";
+                }
+                if (!Regex.IsMatch(creditno, @"\d{16}"))
+                {
+                    error = error + " Enter credit number  </br>";
+                }
+                if (creditdate == "")
+                {
+                    error = error + " Enter credit date  </br>";
+                }
+                if (!Regex.IsMatch(cvv, @"\d{3}"))
+                {
+                    error = error + " Enter cvv  </br>";
+                }
+                if (pass == "")
+                {
+                    error = error + " Enter password  </br>";
+                }
+                if (pass2 == "")
+                {
+                    error = error + " Enter Confirm password  </br>";
+                }
+                if (dob == "")
+                {
+                    error = error + " Enter date of birth  </br>";
+                }
+                if (error != "")
+                {
+                    errorMsg.Text = error;
+                    errorMsg.ForeColor = Color.Red;
+                    errorMsg.Visible = true;
+                    Debug.WriteLine(error);
+                    return;
+                }
                 int scores = checkPassword(Pass.Text);
-            string status = "";
-            switch (scores)
-            {
-                case 1:
-                    status = "Very Weak";
-                    break;
-                case 2:
-                    status = "Weak";
-                    break;
-                case 3:
-                    status = "Medium";
-                    break;
-                case 4:
-                    status = "Strong";
-                    break;
-                case 5:
-                    status = "Excellent";
-                    break;
-                default:
-                    break;
-            }
-            lbl_password2checker.Text = "Status : " + status;
-            if (scores < 4)
-            {
-                lbl_password2checker.ForeColor = Color.Red;
-                return;
-            }
-            lbl_password2checker.ForeColor = Color.Green;
-            var fname = FName.Text.ToString();
-            var lname = LName.Text.ToString();
-            var email = Email.Text.ToString();
-            var creditname = CreditName.Text.ToString();
-            var creditno = CreditNo.Text.ToString();
-            var creditdate = CreditDate.Text.ToString();
-            var cvv = CVV.Text.ToString();
-            var pass = Pass.Text.ToString();
-            var pass2 = Pass2.Text.ToString();
-            var dob = DoB.Text.ToString();
-            var error = "";
-            if (fname == "")
-            {
-                error = error + " Enter First Name </br>";
-            }
-            if (lname == "")
-            {
-                error = error + "  Enter Last Name  </br>";
-            }
-            var validEmail = IsValidEmail(email);
-            if (!validEmail)
-            {
-                error = error + " Enter Email  </br>";
-            }
-            if (creditname == "")
-            {
-                error = error + " Enter credit name  </br>";
-            }
-            if (!Regex.IsMatch(creditno, @"\d{16}"))
-            {
-                error = error + " Enter credit number  </br>";
-            }
-            if (creditdate == "")//CHANGE
-            {
-                error = error + " Enter credit date  </br>";
-            }
-            if (!Regex.IsMatch(cvv, @"\d{3}"))
-            {
-                error = error + " Enter cvv  </br>";
-            }
-            if (pass == "")
-            {
-                error = error + " Enter password  </br>";
-            }
-            if (pass2 == "")
-            {
-                error = error + " Enter Confirm password  </br>";
-            }
-            if (dob == "")
-            {
-                error = error + " Enter date of birth  </br>";
-            }
-            if (error != "")
-            {
-                errorMsg.Text = error;
-                errorMsg.ForeColor = Color.Red;
-                errorMsg.Visible = true;
-                Debug.WriteLine(error);
-                return;
-            }
-            using (var con = new SqlConnection(MYDBConnectionString))
+                if (scores < 4)
+                {
+                    errorMsg.Text = "Password too weak";
+                    errorMsg.ForeColor = Color.Red;
+                    errorMsg.Visible = true;
+                    return;
+                }
+                using (var con = new SqlConnection(MYDBConnectionString))
             {
                 con.Open();
                 var check = "SELECT * FROM [ASusers] WHERE Email = @Email";

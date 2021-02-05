@@ -26,30 +26,32 @@ namespace ASassignment
         string id;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session[ "Attempts"] == null)
+            if (Session["Attempts"] == null)
             {
                 Session["Attempts"] = 0;
             }
-            if (Session["Timout"] == null)
+            if (Session["Timeout"] == null)
             {
                 Session["Timeout"] = DateTime.Now.ToString();
             }
-            
-
         }
-
         protected void loginBtn_Click(object sender, EventArgs e)
         {
-            var sessiontimeout = Session["Timeout"];
-            var sessiontimeoutDate = Convert.ToDateTime(sessiontimeout);
-            var sessiontimenow = DateTime.Now;
-            var sessionresult = DateTime.Compare(sessiontimenow, sessiontimeoutDate);
-            if (sessionresult == -1)
-            {
-                errorMsg.Text = "please try agian later";
-                errorMsg.ForeColor = Color.Red;
-                return;
-            }
+            
+                var sessiontimeout = Session["Timeout"];
+                Debug.WriteLine(sessiontimeout);
+                var sessiontimeoutDate = Convert.ToDateTime(sessiontimeout);
+                var sessiontimenow = DateTime.Now;
+                var sessionresult = DateTime.Compare(sessiontimenow, sessiontimeoutDate);
+
+                Debug.WriteLine(sessionresult);
+                if (sessionresult == -1)
+                {
+                    errorMsg.Text = "please try agian later";
+                    errorMsg.ForeColor = Color.Red;
+                    return;
+                }
+            
             var email = HttpUtility.HtmlEncode(Email.Text);
             var password = HttpUtility.HtmlEncode(Password.Text);
             if (email == "")
@@ -87,10 +89,13 @@ namespace ASassignment
                             errorMsg.ForeColor = Color.Red;
                             errorMsg.Visible = true;
                             Session["Attempts"] = Convert.ToInt32(Session["Attempts"]) + 1;
-                            if (Convert.ToInt32(Session["Attempts"]) >= 3)
+                            Debug.WriteLine(Session["Attempts"]);
+                            if (Convert.ToInt32(Session["Attempts"]) == 3)
                             {
                                 //implement timeout
-                                timeout = DateTime.Now.ToString();
+                                timeout = DateTime.Now.AddMinutes(5).ToString();
+                                Debug.WriteLine("dsadsadsadsasdadasd");
+                                Debug.WriteLine(timeout);
                                 Session["Timeout"] = timeout;
 
                             }
@@ -137,6 +142,7 @@ namespace ASassignment
                     var finalHash = Convert.ToBase64String(hashWithSalt);
                     if (hash == finalHash)
                     {
+                        
                         Session["LoggedIn"] = email;
                         Session["UserId"] = id;
                         string guid = Guid.NewGuid().ToString();
@@ -150,7 +156,7 @@ namespace ASassignment
                         Session["Attempts"] = Convert.ToInt32(Session["Attempts"]) + 1;
                         Debug.WriteLine(Session["Attempts"].ToString());
 
-                        if (Convert.ToInt32(Session["Attempts"]) >= 3)
+                        if (Convert.ToInt32(Session["Attempts"]) == 3)
                         {
                             timeout = DateTime.Now.AddMinutes(5).ToString();
                             Session["Timeout"] = timeout;

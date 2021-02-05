@@ -25,7 +25,9 @@ namespace ASassignment
                 Response.Redirect("Login.aspx");
             }
             var passwordAge = Session["PasswordAge"];
+            Debug.WriteLine(passwordAge);
             var passwordAgeTime = Convert.ToDateTime(passwordAge);
+            passwordAgeTime.AddMinutes(5);
             var timenow = DateTime.Now;
             var result = DateTime.Compare(timenow, passwordAgeTime);
             if (result == -1)
